@@ -12,6 +12,28 @@ export const sessionsReducer = function (state, action) {
       return {
         sessions: [action.payload, ...state.sessions],
       };
+    case "EDIT_SESSION":
+      // return {
+      //   sessions: [
+      //     ...state.sessions.map((session) =>
+      //       session._id === action.payload._id ? action.payload : session
+      //     ),
+      //   ],
+
+      return {
+        sessions: state.sessions.map((session) =>
+          session._id === action.payload._id ? action.payload : session
+        ),
+      };
+
+    // return {
+    //   sessions: [
+    //     ...state.sessions.filter(
+    //       (session) => session._id !== action.payload._id
+    //     ),
+    //     action.payload,
+    //   ],
+    // };
     case "DELETE_SESSION":
       return {
         sessions: state.sessions.filter(

@@ -22,6 +22,6 @@ router.post("/", createSession);
 router.delete("/:id", deleteSession);
 
 // UPDATE a session
-router.patch("/:id", updateSession);
+router.put("/:id", updateSession);
 
 module.exports = router;
