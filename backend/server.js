@@ -4,6 +4,7 @@ const express = require("express");
 // const cors = require("cors");
 const mongoose = require("mongoose");
 const sessionsRoutes = require("./routes/sessions");
+const userRoutes = require("./routes/user");
 
 // express app
 const app = express();
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
 });
 
 //routes
+app.use("/api/user", userRoutes);
 app.use("/api/sessions", sessionsRoutes);
 
 // connect to DB
