@@ -6,8 +6,12 @@ const {
   deleteSession,
   updateSession,
 } = require("../controllers/sessionController");
+const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
+
+// require auth for all sessions routes
+router.use(requireAuth);
 
 // GET all sessions
 router.get("/", getSessions);

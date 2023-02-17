@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import useSessionsContext from "../hooks/useSessionsContext";
+import useAuthContext from "../hooks/useAuthContext";
 
 function SessionForm() {
   const { dispatch } = useSessionsContext();
+  const { user } = useAuthContext();
+
   const [title, setTitle] = useState("");
   const [hours, setHours] = useState("");
   const [breaks, setBreaks] = useState("");
@@ -24,6 +27,11 @@ function SessionForm() {
   const handleSubmit = async function (e) {
     e.preventDefault();
 
+    if (!user) {
+      setError("You must be logged in");
+      return;
+    }
+
     const session = { title, hours, breaks };
 
     const response = await fetch("/api/sessions", {
@@ -31,6 +39,7 @@ function SessionForm() {
       body: JSON.stringify(session),
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${user.token}`,
       },
     });
     const json = await response.json();

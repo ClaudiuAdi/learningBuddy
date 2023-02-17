@@ -5,13 +5,19 @@ import { useEffect } from "react";
 import SessionDetails from "../components/SessionDetails";
 import SessionForm from "../components/SessionForm";
 import useSessionsContext from "../hooks/useSessionsContext";
+import useAuthContext from "../hooks/useAuthContext";
 
 function Home() {
   const { sessions, dispatch } = useSessionsContext();
+  const { user } = useAuthContext();
 
   useEffect(() => {
     const fetchSessions = async () => {
-      const response = await fetch("/api/sessions");
+      const response = await fetch("/api/sessions", {
+        headers: {
+          authorization: `Bearer ${user.token}`,
+        },
+      });
       const json = await response.json();
 
       if (response.ok) {
@@ -19,8 +25,10 @@ function Home() {
       }
     };
 
-    fetchSessions();
-  }, [dispatch]);
+    if (user) {
+      fetchSessions();
+    }
+  }, [dispatch, user]);
 
   return (
     <div className="home">

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import useSessionsContext from "../hooks/useSessionsContext";
 import { SessionContext } from "../context/SessionContext";
+import useAuthContext from "../hooks/useAuthContext";
 
 // date fns
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
@@ -8,13 +9,22 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 function SessionDetails(props) {
   const { dispatch } = useContext(SessionContext);
   // const { dispatch } = useSessionsContext();
+  const { user } = useAuthContext();
+
   const [isEditing, setIsEditing] = useState(false);
   const [tempSession, setTempSession] = useState(null);
   const [changed, setChanged] = useState(false);
 
   const handleDelete = async () => {
+    if (!user) {
+      console.log("nu merge");
+      return;
+    }
     const response = await fetch(`/api/sessions/${props.session._id}`, {
       method: "DELETE",
+      headers: {
+        authorization: `Bearer ${user.token}`,
+      },
     });
 
     const json = await response.json();
@@ -31,12 +41,18 @@ function SessionDetails(props) {
 
   const handleSave = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      return;
+    }
+
     console.log(tempSession);
     const response = await fetch(`/api/sessions/${props.session._id}`, {
       method: "PUT",
       body: JSON.stringify(tempSession),
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${user.token}`,
       },
     });
     const json = await response.json();

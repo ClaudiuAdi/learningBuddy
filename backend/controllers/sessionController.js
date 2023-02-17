@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 
 //get all sessions
 const getSessions = async (req, res) => {
-  const sessions = await Session.find({}).sort({ createdAt: -1 });
+  const user_id = req.user._id;
+
+  const sessions = await Session.find({ user_id }).sort({ createdAt: -1 });
   res.status(200).json(sessions);
 };
 
@@ -50,7 +52,9 @@ const createSession = async (req, res) => {
 
   //add doc to db
   try {
-    const session = await Session.create({ title, hours, breaks });
+    const user_id = req.user._id;
+
+    const session = await Session.create({ title, hours, breaks, user_id });
     res.status(200).json(session);
   } catch (error) {
     res.status(400).json({ error: error.message });
